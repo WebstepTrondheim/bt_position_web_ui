@@ -1,0 +1,60 @@
+/* This file is for your main application css. */
+
+@import "./phoenix.css";
+
+@import "../../deps/phoenix_live_view/assets/css/live_view.css";
+
+.dashboard {
+    display: flex; 
+}
+.dashboard * {
+    display: flex; 
+}
+
+.signal-card {
+    width: 280px;
+    height: 160px;
+    background: #EFF4FA;
+    border-radius: 8px;
+    margin-bottom: 3em;
+    margin-right: 3em;
+}
+
+.wristband-container {
+    align-items: center;
+}
+
+.wristband {
+    background: #4D4D4D;
+    height: 160px;
+    width: 32px;
+    margin-left: 42px;
+}
+
+.ring {
+    background: #696969;
+    height: 68px;
+    width: 68px;
+    border-radius: 50%;
+    margin-left: -50px;
+}
+
+.alarm-button {
+    background: #D7C575;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.information-container {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.information-container * {
+    padding-left: 1em;
+}
+.device-id, .parent-id {
+}

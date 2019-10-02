@@ -43,6 +43,7 @@ defmodule BtPositionWebUiWeb.WelcomeLive do
   def handle_info(new_device, socket) do
     new_list =
       Keyword.put(socket.assigns.list_of_devices, new_device.device_id, new_device.closest_parent)
+      |> Enum.sort_by(fn {device_id, _parent} -> device_id end)
     {:noreply, assign(socket, list_of_devices: new_list)}
   end
 end

@@ -25,10 +25,8 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# PubSub
-# config :bt_position,
-#   pubsub: [name: BtPosition.PubSub, adapter: Phoenix.PubSub.PG2]
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+import_config "../../bt_position/config/config.exs"
+
 import_config "#{Mix.env()}.exs"

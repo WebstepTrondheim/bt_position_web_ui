@@ -5,7 +5,7 @@ defmodule BtPositionWebUi.Application do
 
   def start(_type, _args) do
     children = [
-      BtPositionWebUiWeb.Endpoint,
+      BtPositionWebUiWeb.Endpoint
     ]
 
     opts = [strategy: :one_for_one, name: BtPositionWebUi.Supervisor]

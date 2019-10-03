@@ -50,11 +50,44 @@
 
 .information-container {
     flex-direction: column;
+    flex-grow: 1;
+}
+
+.text-container {
+    flex-direction: column;
     justify-content: center;
+    flex-grow: 3;
+    padding-left: 1em;
+}
+
+.battery-container {
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: center;
+    border-radius: 0 0 8px 0;
+    margin-left: -18px;
+}
+
+
+.battery-container > div {
+    margin-right: 1em;
+    font-size: 0.8em;
 }
 
 .information-container * {
-    padding-left: 1em;
 }
 .device-id, .parent-id {
+}
+
+.red {
+    background: #C3746C;
+    color: white;
+}
+
+.yellow {
+    background: #D7C575;
+}
+
+.hide {
+    display: none;
 }

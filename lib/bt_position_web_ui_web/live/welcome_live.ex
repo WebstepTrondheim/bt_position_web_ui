@@ -62,23 +62,19 @@ defmodule BtPositionWebUiWeb.WelcomeLive do
   def handle_info({:position_update, new_device}, socket) do
     list_of_devices = socket.assigns.list_of_devices
 
-    new_list =
-      Keyword.put(
-        list_of_devices,
-        new_device.device_id,
-        new_device.closest_parent
-      )
-      |> Enum.sort_by(fn {device_id, _parent} -> device_id end)
+    new_list = with device_id <- new_device["device_id"] |> String.to_atom(),
+         parent_id <- new_device["parent_id"] |> String.to_atom(),
+    do: Keyword.put(list_of_devices, device_id, parent_id) |> Enum.sort_by(fn {device_id, _parent} -> device_id end)
 
     {:noreply, assign(socket, list_of_devices: new_list)}
   end
 
-  def handle_info({:battery_update, %{device_id: device_id, charge_level: charge_level}}, socket) do
+  def handle_info({:battery_update, %{"device_id" => device_id, "charge_level" => charge_level}}, socket) do
     has_low_battery? = charge_level < 20
     battery_list = socket.assigns.list_of_battery_status
 
     new_list =
-      Keyword.put(battery_list, device_id, charge_level)
+      Keyword.put(battery_list, device_id |> String.to_atom(), charge_level)
       |> IO.inspect()
 
     {:noreply, assign(socket, list_of_battery_status: new_list)}

@@ -1,0 +1,83 @@
+<h1 style="margin-top: auto; flex-grow: 1; ">Welfare Dashboard</h1>
+
+<%= if @list_of_devices |> Enum.count() > 0 do %>
+<h2 style="flex-grow: 1;">Online Devices</h2>
+<div class="dashboard">
+  <div id="online-devices">
+  <%= for {device, parent} <- @list_of_devices do %>
+    <div class="signal-card">
+      <div class="wristband-container">
+        <div class="wristband"></div>
+          <div class="ring">
+            <div class="alarm-button"> </div>
+          </div>
+      </div>
+      <div class="information-container">
+        <div class="text-container">
+          <div class="device-id">
+            <%= device
+                |> Atom.to_string()
+                |> String.upcase() %>
+          </div>
+          <div class="small">is closest to</div>
+          <div class="parent-id">
+            <%= parent
+                |> Atom.to_string()
+                |> String.upcase() %>
+          </div>
+        </div>
+        <div class="battery-container <%= @list_of_battery_status[device]
+                                          |> BtPositionWebUiWeb.DashboardLive.get_battery_color() %>" >
+          <%= if @list_of_battery_status
+                  |> Keyword.has_key?(device) do %>
+            <div class="">
+              Battery level <%= @list_of_battery_status[device] %>%
+            </div>
+          <% else %>
+            <div>
+              Battery level not available
+            </div>
+          <% end %>
+        </div>
+      </div> <!-- end info container -->
+    </div> <!-- end of signal card -->
+
+  <% end %>
+  </div>
+  <%= else %>
+    no online devices
+  <% end %>
+
+<%= if @list_of_offline_devices |> Enum.count() > 0 do %>
+  <h2>Offline devices</h2>
+  <div id="offline-devices">
+    <%= for {device_id, payload} <- @list_of_offline_devices do %>
+    <div class="signal-card">
+      <div class="wristband-container">
+        <div class="wristband"></div>
+          <div class="ring">
+            <div class="alarm-button"> </div>
+          </div>
+      </div>
+      <div class="information-container">
+        <div class="text-container">
+          <div class="device-id">
+            <%= device_id
+                |> Atom.to_string()
+                |> String.upcase() %>
+          </div>
+          <div class="small">Last known position:</div>
+          <div class="parent-id">
+            <%= payload["last_signal"]["parent_id"]
+                |> String.upcase() %>
+          </div>
+          <div class="small">
+            <%= payload["last_signal"]["time"] %>
+          </div>
+        </div>
+      </div> <!-- end info container -->
+    </div> <!-- end of signal card -->
+    <% end %> <!-- list comp end -->
+  </div>
+<% end %> <!-- end if -->
+</div> <!-- end dashboard -->

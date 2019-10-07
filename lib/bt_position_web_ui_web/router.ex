@@ -18,9 +18,9 @@ defmodule BtPositionWebUiWeb.Router do
   scope "/", BtPositionWebUiWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    # get "/", PageController, :index
 
-    live "/welcome", WelcomeLive
+    live "/", DashboardLive
   end
 
   # Other scopes may use custom stacks.

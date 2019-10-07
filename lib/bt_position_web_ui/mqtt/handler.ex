@@ -54,16 +54,40 @@ defmodule BtPositionWebUi.MQTT.Handler do
   """
   def handle_message(["position", "device", device], payload, state) do
     with {:ok, data} <- Jason.decode(payload),
-      do: Phoenix.PubSub.broadcast(BtPositionWebUi.PubSub, "device_update", {:position_update, data})
+         do:
+           Phoenix.PubSub.broadcast(
+             BtPositionWebUi.PubSub,
+             "device_update",
+             {:position_update, data}
+           )
 
     {:ok, state}
   end
 
-
-  def handle_message([ "battery", "device", device], payload, state) do
+  def handle_message(["battery", "device", device], payload, state) do
     {:ok, data} = Jason.decode(payload)
+
     with {:ok, data} <- Jason.decode(payload),
-      do: Phoenix.PubSub.broadcast(BtPositionWebUi.PubSub, "device_update", {:battery_update, data})
+         do:
+           Phoenix.PubSub.broadcast(
+             BtPositionWebUi.PubSub,
+             "device_update",
+             {:battery_update, data}
+           )
+
+    {:ok, state}
+  end
+
+  def handle_message(["offline", "device", device], payload, state) do
+    {:ok, data} = Jason.decode(payload)
+
+    with {:ok, data} <- Jason.decode(payload),
+         do:
+           Phoenix.PubSub.broadcast(
+             BtPositionWebUi.PubSub,
+             "device_update",
+             {:offline_update, data}
+           )
 
     {:ok, state}
   end

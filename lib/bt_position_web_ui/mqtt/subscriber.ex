@@ -20,12 +20,10 @@ defmodule BtPositionWebUi.MQTT.Subscriber do
         password: System.get_env("VELFERD_SUBSCRIBER_PWD"),
         server: {
           Tortoise.Transport.SSL,
-          cacertfile: :certifi.cacertfile(),
-          host: System.get_env("VELFERD_MQTT_HOST"),
-          port: 8883
+          cacertfile: :certifi.cacertfile(), host: System.get_env("VELFERD_MQTT_HOST"), port: 8883
         },
         handler: {BtPositionWebUi.MQTT.Handler, []},
-        subscriptions: ["position/#", "battery/#", "alarm/#"]
+        subscriptions: ["position/#", "battery/#", "alarm/#", "offline/#"]
       )
   end
 end

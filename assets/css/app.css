@@ -4,8 +4,13 @@
 
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
 
+h1, h2 {
+    flex-grow: 1;
+}
+
 .dashboard {
-    display: flex; 
+    display: flex;
+    flex-direction: column;
 }
 .dashboard * {
     display: flex; 

@@ -16,14 +16,16 @@ defmodule BtPositionWebUi.MQTT.Subscriber do
     {:ok, _pid} =
       Tortoise.Connection.start_link(
         client_id: "bt-position-ui-subscriber",
-        user_name: System.get_env("VELFERD_MQTT_USER"),
-        password: System.get_env("VELFERD_MQTT_PWD"),
+        user_name: System.get_env("VELFERD_SUBSCRIBER_USER"),
+        password: System.get_env("VELFERD_SUBSCRIBER_PWD"),
         server: {
           Tortoise.Transport.SSL,
-          cacertfile: :certifi.cacertfile(), host: System.get_env("VELFERD_MQTT_HOST"), port: 8883
+          cacertfile: :certifi.cacertfile(),
+          host: System.get_env("VELFERD_MQTT_HOST"),
+          port: 8883
         },
         handler: {BtPositionWebUi.MQTT.Handler, []},
-        subscriptions: ["#"]
+        subscriptions: ["position/#", "battery/#", "alarm/#"]
       )
   end
 end

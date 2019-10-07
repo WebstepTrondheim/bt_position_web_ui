@@ -75,7 +75,6 @@ defmodule BtPositionWebUiWeb.WelcomeLive do
 
     new_list =
       Keyword.put(battery_list, device_id |> String.to_atom(), charge_level)
-      |> IO.inspect()
 
     {:noreply, assign(socket, list_of_battery_status: new_list)}
   end

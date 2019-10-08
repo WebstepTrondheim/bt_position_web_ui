@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-This app depends on `bt_position`. `bt_position` should be in the same folder in as this project before you try to start it.
+This app depends on [bt_position](https://github.com/WebstepTrondheim/bt_position). `bt_position` should be in the same folder in as this project before you try to start it.
 
 To start your Phoenix server:
 

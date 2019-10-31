@@ -12,11 +12,13 @@ You can run `bt_position` yourself *but check with all people involved in the pr
 
 To run `bt_position` locally it should be in the same folder as this project.
 
+If you want to run this, ask Anders or Save for access to the Slite page.
 
 To start your Phoenix server:
 
 
   * Install Elixir (if you haven't)
+  * Set the environment variables described on https://webstep.slite.com/app/channels/2OK02SCAce/collections/xJNp18kYP/notes/MYMCqMoa0a
   * Install dependencies with `mix deps.get`
   * Install Node.js dependencies with `cd assets && npm install`
   * Start Phoenix endpoint with `mix phx.server`

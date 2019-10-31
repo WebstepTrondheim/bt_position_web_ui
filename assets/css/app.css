@@ -8,6 +8,10 @@ h1, h2 {
     flex-grow: 1;
 }
 
+.container {
+    max-width: 80%;
+}
+
 .dashboard {
     display: flex;
     flex-direction: column;
@@ -23,6 +27,7 @@ h1, h2 {
     border-radius: 8px;
     margin-bottom: 3em;
     margin-right: 3em;
+    flex-shrink: 0;
 }
 
 .wristband-container {

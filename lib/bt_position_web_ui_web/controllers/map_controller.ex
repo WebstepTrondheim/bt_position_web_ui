@@ -1,7 +1,7 @@
-defmodule BtPositionWebUiWeb.PageController do
+defmodule BtPositionWebUiWeb.MapController do
   use BtPositionWebUiWeb, :controller
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    render(conn, "map.html")
   end
 end

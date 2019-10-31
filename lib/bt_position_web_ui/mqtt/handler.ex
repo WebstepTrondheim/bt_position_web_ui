@@ -57,7 +57,7 @@ defmodule BtPositionWebUi.MQTT.Handler do
          do:
            Phoenix.PubSub.broadcast(
              BtPositionWebUi.PubSub,
-             "device_update",
+             "position_update",
              {:position_update, data}
            )
 
@@ -73,6 +73,20 @@ defmodule BtPositionWebUi.MQTT.Handler do
              BtPositionWebUi.PubSub,
              "device_update",
              {:battery_update, data}
+           )
+
+    {:ok, state}
+  end
+
+  def handle_message(["alarm", "device", device], payload, state) do
+    {:ok, data} = Jason.decode(payload)
+
+    with {:ok, data} <- Jason.decode(payload),
+         do:
+           Phoenix.PubSub.broadcast(
+             BtPositionWebUi.PubSub,
+             "device_update",
+             {:alarm_update, data}
            )
 
     {:ok, state}

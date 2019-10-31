@@ -1,8 +1,10 @@
 defmodule BtPositionWebUiWeb.DashboardLive do
   use Phoenix.LiveView
 
+  require Logger
+
   def render(assigns) do
-    BtPositionWebUiWeb.PageView.render("index.html", assigns)
+    BtPositionWebUiWeb.PageView.render("dashboard.html", assigns)
   end
 
   def mount(_session, socket) do
@@ -11,25 +13,36 @@ defmodule BtPositionWebUiWeb.DashboardLive do
       "device_update"
     )
 
-    {:ok, assign(socket, list_of_devices: [], list_of_battery_status: [], list_of_offline_devices: [])}
+    Phoenix.PubSub.subscribe(
+      BtPositionWebUi.PubSub,
+      "position_update"
+    )
+
+    {:ok,
+     assign(socket,
+       device_list: [],
+       battery_status_list: [],
+       offline_devices_list: [],
+       alarm_status_list: []
+     )}
   end
 
   def handle_info({:position_update, new_device}, socket) do
-    list_of_devices = socket.assigns.list_of_devices
-    offline_devices = socket.assigns.list_of_offline_devices
+    device_list = socket.assigns.device_list
+    offline_devices = socket.assigns.offline_devices_list
 
     new_list =
       with device_id <- new_device["device_id"] |> String.to_atom(),
            parent_id <- new_device["parent_id"] |> String.to_atom(),
            do:
-             Keyword.put(list_of_devices, device_id, parent_id)
+             Keyword.put(device_list, device_id, parent_id)
              |> Enum.sort_by(fn {device_id, _parent} -> device_id end)
 
     offline_devices =
-        offline_devices
-        |> Keyword.delete(new_device["device_id"] |> String.to_atom())
+      offline_devices
+      |> Keyword.delete(new_device["device_id"] |> String.to_atom())
 
-    {:noreply, assign(socket, list_of_devices: new_list, list_of_offline_devices: offline_devices)}
+    {:noreply, assign(socket, device_list: new_list, offline_devices_list: offline_devices)}
   end
 
   def handle_info(
@@ -37,11 +50,24 @@ defmodule BtPositionWebUiWeb.DashboardLive do
         socket
       ) do
     has_low_battery? = charge_level < 20
-    battery_list = socket.assigns.list_of_battery_status
+    battery_list = socket.assigns.battery_status_list
 
     new_list = Keyword.put(battery_list, device_id |> String.to_atom(), charge_level)
 
-    {:noreply, assign(socket, list_of_battery_status: new_list)}
+    {:noreply, assign(socket, battery_status_list: new_list)}
+  end
+
+  def handle_info(
+        {:alarm_update, %{"device_id" => device_id, "alarm_status" => alarm_status}},
+        socket
+      ) do
+    current_list = socket.assigns.alarm_status_list
+    alarm_list = Keyword.put(current_list, device_id |> String.to_atom(), alarm_status)
+
+    Logger.debug("#{device_id} ALARM: ")
+    inspect(current_list)
+
+    {:noreply, assign(socket, alarm_status_list: alarm_list)}
   end
 
   def handle_info({:offline_update, %{"device_id" => device_id} = payload}, socket) do
@@ -49,14 +75,14 @@ defmodule BtPositionWebUiWeb.DashboardLive do
     device_id = device_id |> String.to_atom()
 
     offline_list =
-      assigns.list_of_offline_devices
+      assigns.offline_devices_list
       |> Keyword.put(device_id, payload)
 
     active_devices =
-      assigns.list_of_devices
+      assigns.device_list
       |> Keyword.delete(device_id)
 
-    {:noreply, assign(socket, list_of_offline_devices: offline_list, list_of_devices: active_devices)}
+    {:noreply, assign(socket, offline_devices_list: offline_list, device_list: active_devices)}
   end
 
   def get_battery_color(charge_level) do

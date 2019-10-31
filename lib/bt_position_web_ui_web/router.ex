@@ -15,12 +15,21 @@ defmodule BtPositionWebUiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :map do
+    plug :put_layout, {BtPositionWebUiWeb.LayoutView, "maplayout.html"}
+  end
+
   scope "/", BtPositionWebUiWeb do
     pipe_through :browser
 
-    # get "/", PageController, :index
-
     live "/", DashboardLive
+    get "/old", PageController, :index
+  end
+
+  scope "/", BtPositionWebUiWeb do
+    pipe_through [:browser, :map]
+
+    get "/map", MapController, :index
   end
 
   # Other scopes may use custom stacks.

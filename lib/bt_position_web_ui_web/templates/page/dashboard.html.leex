@@ -1,10 +1,10 @@
 <h1 style="margin-top: auto; flex-grow: 1; ">Welfare Dashboard</h1>
 
-<%= if @list_of_devices |> Enum.count() > 0 do %>
+<%= if @device_list |> Enum.count() > 0 do %>
 <h2 style="flex-grow: 1;">Online Devices</h2>
 <div class="dashboard">
   <div id="online-devices">
-  <%= for {device, parent} <- @list_of_devices do %>
+  <%= for {device, parent} <- @device_list do %>
     <div class="signal-card">
       <div class="wristband-container">
         <div class="wristband"></div>
@@ -26,12 +26,12 @@
                 |> String.upcase() %>
           </div>
         </div>
-        <div class="battery-container <%= @list_of_battery_status[device]
+        <div class="battery-container <%= @battery_status_list[device]
                                           |> BtPositionWebUiWeb.DashboardLive.get_battery_color() %>" >
-          <%= if @list_of_battery_status
+          <%= if @battery_status_list
                   |> Keyword.has_key?(device) do %>
             <div class="">
-              Battery level <%= @list_of_battery_status[device] %>%
+              Battery level <%= @battery_status_list[device] %>%
             </div>
           <% else %>
             <div>
@@ -48,10 +48,10 @@
     no online devices
   <% end %>
 
-<%= if @list_of_offline_devices |> Enum.count() > 0 do %>
+<%= if @offline_devices_list |> Enum.count() > 0 do %>
   <h2>Offline devices</h2>
   <div id="offline-devices">
-    <%= for {device_id, payload} <- @list_of_offline_devices do %>
+    <%= for {device_id, payload} <- @offline_devices_list do %>
     <div class="signal-card">
       <div class="wristband-container">
         <div class="wristband"></div>

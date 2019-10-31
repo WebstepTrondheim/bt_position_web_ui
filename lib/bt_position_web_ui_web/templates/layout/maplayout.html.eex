@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Atea Map</title>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="https://api.mazemap.com/js/v2.0.18/mazemap.min.css">
+  </head>
+  <body>
+    <header>
+      <section class="container">
+        <img src="<%= Routes.static_path(@conn, "/images/atea-logo.jpeg") %>" alt="Atea Logo" style="height: 100px;" />
+      </section>
+    </header>
+    <main role="main" >
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+      <div id='mazemap-container' style="width: 100%; min-height: 1000px;" class="mazemap map-container"></div>
+
+      <%= render @view_module, @view_template, assigns %>
+    </main>
+    <script type='text/javascript' src='https://api.mazemap.com/js/v2.0.18/mazemap.min.js'></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/map.js") %>"></script>
+  </body>
+</html>

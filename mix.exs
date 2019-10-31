@@ -41,8 +41,9 @@ defmodule BtPositionWebUi.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:phoenix_live_view, "~> 0.3.0"},
       {:floki, ">= 0.0.0", only: :test},
-      {:bt_position, path: "../bt_position"},
-      {:tortoise, "~> 0.9"}
+      # {:bt_position, path: "../bt_position"},
+      {:tortoise, "~> 0.9"},
+      {:certifi, "~> 2.5"}
     ]
   end
 end

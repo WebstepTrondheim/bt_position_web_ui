@@ -23,7 +23,7 @@ defmodule BtPositionWebUi.MQTT.Subscriber do
           cacertfile: :certifi.cacertfile(), host: System.get_env("VELFERD_MQTT_HOST"), port: 8883
         },
         handler: {BtPositionWebUi.MQTT.Handler, []},
-        subscriptions: ["position/#", "battery/#", "alarm/#", "offline/#"]
+        subscriptions: ["position/#", "battery/#", "alarm/#"]
       )
   end
 end

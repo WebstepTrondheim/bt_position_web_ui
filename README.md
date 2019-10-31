@@ -8,7 +8,7 @@ This app depends on [bt_position](https://github.com/WebstepTrondheim/bt_positio
 
 If you don't get any messages it might mean that the app is not runnig on `velferd.digital`. 
 
-You can run `bt_position` yourself *but check with all people involved in the project since you may create duplicate messages for everybody else*.
+You can run `bt_position` yourself but **check with all people involved** in the project since you may create **duplicate messages for everybody else**.
 
 To run `bt_position` locally it should be in the same folder as this project.
 

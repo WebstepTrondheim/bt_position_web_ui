@@ -5,11 +5,13 @@
 <div class="dashboard">
   <div id="online-devices">
   <%= for {device, parent} <- @device_list do %>
-    <div class="signal-card">
+    <div class="signal-card ">
       <div class="wristband-container">
         <div class="wristband"></div>
           <div class="ring">
-            <div class="alarm-button"> </div>
+            <div class="alarm-button
+                        <%= if @alarm_status_list[device] do 'alarm-ani' end %>">
+            </div>
           </div>
       </div>
       <div class="information-container">
@@ -26,6 +28,8 @@
                 |> String.upcase() %>
           </div>
         </div>
+
+
         <div class="battery-container <%= @battery_status_list[device]
                                           |> BtPositionWebUiWeb.DashboardLive.get_battery_color() %>" >
           <%= if @battery_status_list

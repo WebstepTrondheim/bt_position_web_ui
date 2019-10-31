@@ -61,11 +61,21 @@ defmodule BtPositionWebUiWeb.DashboardLive do
         {:alarm_update, %{"device_id" => device_id, "alarm_status" => alarm_status}},
         socket
       ) do
+    device_id = device_id |> String.to_atom()
     current_list = socket.assigns.alarm_status_list
-    alarm_list = Keyword.put(current_list, device_id |> String.to_atom(), alarm_status)
 
-    Logger.debug("#{device_id} ALARM: ")
-    inspect(current_list)
+    alarm_has_been_activated? =
+      alarm_status and
+        not Keyword.equal?(current_list, [{device_id, alarm_status}])
+
+    alarm_list =
+      case alarm_has_been_activated? do
+        true ->
+          Keyword.put(current_list, device_id, alarm_status)
+
+        false ->
+          current_list
+      end
 
     {:noreply, assign(socket, alarm_status_list: alarm_list)}
   end

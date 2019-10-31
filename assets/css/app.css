@@ -84,11 +84,6 @@ h1, h2 {
     font-size: 0.8em;
 }
 
-.information-container * {
-}
-.device-id, .parent-id {
-}
-
 .red {
     background: #C3746C;
     color: white;
@@ -100,4 +95,18 @@ h1, h2 {
 
 .hide {
     display: none;
+}
+
+.alarm-ani {
+    background: #C3746C;
+    animation: ripple 3s linear infinite;
+}
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 .7rem rgba(195, 116, 108, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 3rem rgba(195, 116, 108, 0.2);
+    }
 }

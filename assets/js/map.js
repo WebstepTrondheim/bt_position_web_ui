@@ -20,15 +20,22 @@ let WsMap = function() {
     lunsj: {
       lat: 63.4309541996827,
       lng: 10.395609000540617
+    },
+    lille: {
+      lng: 10.395755851541963,
+      lat: 63.43094280264981
+    },
+    store: {
+      lng: 10.395965063849417,
+      lat: 63.4311143575317
     }
   }
 
   function parent_id_to_room(parent_id) {
-    console.log("get parent", parent_id)
     let parents = {
       "d2608d72b86f": "sofa",
-      "fe4fdc9e9a24": "projektor",
-      "feb1cd8c6dea": "lunsj"
+      "fe4fdc9e9a24": "lille",
+      "feb1cd8c6dea": "store"
     }
     return parents[parent_id]
   }
@@ -76,9 +83,7 @@ let WsMap = function() {
 
   function draw_devices() {
     for(let device in devices) {
-      console.log("draw:" , device)
       let room = parent_id_to_room(devices[device])
-      console.log("ROOM", room)
       if(room) {
         add_marker(rooms[room])
       }
@@ -126,42 +131,35 @@ let init = function() {
     lng: 10.395839
   }
 
-
-
   // websocket
   let channel = socket.channel("map:lobby", {})
 
   channel.on("update_positions", resp => {
     let device = JSON.parse(resp.device_position)
-    console.log(ws_map.devices)
     if(ws_map.devices[device.device_id] != device.parent_id) {
       ws_map.devices[device.device_id] = device.parent_id
     }
 
-    console.log(ws_map.devices)
-
     ws_map.draw_devices()
   })
 
-  console.log("JS JOINING map:lobby")
+
+  channel.on("update_alarm", resp => {
+    let data = JSON.parse(resp.device_alarm)
+    console.log(data)
+    // if(ws_map.devices[device.device_id] != device.parent_id) {
+    //   ws_map.devices[device.device_id] = device.parent_id
+    // }
+
+    // ws_map.draw_devices()
+  })
+
   channel.join()
     .receive("ok", resp => { console.log("Joined successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })
 }
 
 init()
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // let lunsj = {

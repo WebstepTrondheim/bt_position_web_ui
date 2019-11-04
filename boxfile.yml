@@ -1,0 +1,33 @@
+run.config:
+  # elixir runtime
+  engine: elixir
+  engine.config:
+    # Elixir Settings
+    runtime: elixir-1.9
+
+  # we need nodejs in development
+  # ensure inotify exists for hot-code reloading
+  dev_packages:
+    - nodejs
+    - inotify-tools
+
+  # cache node_modules
+  cache_dirs:
+    - node_modules
+
+  # add node_module bins to the $PATH
+  extra_path_dirs:
+    - node_modules/.bin
+
+  # enable the filesystem watcher
+  fs_watch: true
+
+
+deploy.config:
+  # Generate static assets
+  extra_steps:
+    - mix phx.digest
+
+# Web component exposes the app to the network
+web.bt_position:
+  start: mix phx.server

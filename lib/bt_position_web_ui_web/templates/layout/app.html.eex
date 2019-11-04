@@ -11,6 +11,7 @@
     <header>
       <section class="container">
         <img src="<%= Routes.static_path(@conn, "/images/atea-logo.jpeg") %>" alt="Atea Logo" style="height: 100px;" />
+        <%= button("Map", to: "/map", method: "get" ) %>
       </section>
     </header>
     <main role="main" class="container">

@@ -18,6 +18,11 @@ defmodule BtPositionWebUiWeb.DashboardLive do
       "position_update"
     )
 
+    Phoenix.PubSub.subscribe(
+      BtPositionWebUi.PubSub,
+      "alarm_update"
+    )
+
     {:ok,
      assign(socket,
        device_list: [],
@@ -51,7 +56,6 @@ defmodule BtPositionWebUiWeb.DashboardLive do
       ) do
     has_low_battery? = charge_level < 20
     battery_list = socket.assigns.battery_status_list
-
     new_list = Keyword.put(battery_list, device_id |> String.to_atom(), charge_level)
 
     {:noreply, assign(socket, battery_status_list: new_list)}
@@ -63,6 +67,8 @@ defmodule BtPositionWebUiWeb.DashboardLive do
       ) do
     device_id = device_id |> String.to_atom()
     current_list = socket.assigns.alarm_status_list
+
+    Logger.debug("ALARM #{device_id} | #{alarm_status}")
 
     alarm_has_been_activated? =
       alarm_status and

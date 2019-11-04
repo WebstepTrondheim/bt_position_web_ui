@@ -20,6 +20,12 @@ config :logger, level: :info
 #
 # To get SSL working, you will need to add the `https` key
 # to the previous section and set your `:url` port to 443:
+
+config :bt_position_web_ui, BtPositionWebUiWeb.Endpoint,
+  http: [port: 443],
+  url: [host: "velferd.digital", port: 443, scheme: "https"],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]]
+
 #
 #     config :bt_position_web_ui, BtPositionWebUiWeb.Endpoint,
 #       ...

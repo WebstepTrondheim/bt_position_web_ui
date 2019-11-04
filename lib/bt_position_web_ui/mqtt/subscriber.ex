@@ -15,7 +15,7 @@ defmodule BtPositionWebUi.MQTT.Subscriber do
   defp connect() do
     {:ok, _pid} =
       Tortoise.Connection.start_link(
-        client_id: "bt-position-ui-subscriber",
+        client_id: UUID.uuid4(:hex),
         user_name: System.get_env("VELFERD_SUBSCRIBER_USER"),
         password: System.get_env("VELFERD_SUBSCRIBER_PWD"),
         server: {

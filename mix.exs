@@ -43,7 +43,8 @@ defmodule BtPositionWebUi.MixProject do
       {:floki, ">= 0.0.0", only: :test},
       # {:bt_position, path: "../bt_position"},
       {:tortoise, "~> 0.9"},
-      {:certifi, "~> 2.5"}
+      {:certifi, "~> 2.5"},
+      {:uuid, "~> 1.1"}
     ]
   end
 end

@@ -52,7 +52,7 @@ defmodule BtPositionWebUi.MQTT.Handler do
   @doc """
   `handle_message/3` takes a list that matches a MQTT path, the payload of a message and the state of the `Handler`. By pattern matching the path we can have different versions handling specific kinds of messages.
   """
-  def handle_message(["position", "device", device], payload, state) do
+  def handle_message(["position", "device", _device], payload, state) do
     with {:ok, data} <- Jason.decode(payload),
          do:
            Phoenix.PubSub.broadcast(
@@ -64,9 +64,7 @@ defmodule BtPositionWebUi.MQTT.Handler do
     {:ok, state}
   end
 
-  def handle_message(["battery", "device", device], payload, state) do
-    {:ok, data} = Jason.decode(payload)
-
+  def handle_message(["battery", "device", _device], payload, state) do
     with {:ok, data} <- Jason.decode(payload),
          do:
            Phoenix.PubSub.broadcast(
@@ -78,23 +76,19 @@ defmodule BtPositionWebUi.MQTT.Handler do
     {:ok, state}
   end
 
-  def handle_message(["alarm", "device", device], payload, state) do
-    {:ok, data} = Jason.decode(payload)
-
+  def handle_message(["alarm", "device", _device], payload, state) do
     with {:ok, data} <- Jason.decode(payload),
          do:
            Phoenix.PubSub.broadcast(
              BtPositionWebUi.PubSub,
-             "device_update",
+             "alarm_update",
              {:alarm_update, data}
            )
 
     {:ok, state}
   end
 
-  def handle_message(["offline", "device", device], payload, state) do
-    {:ok, data} = Jason.decode(payload)
-
+  def handle_message(["offline", "device", _device], payload, state) do
     with {:ok, data} <- Jason.decode(payload),
          do:
            Phoenix.PubSub.broadcast(

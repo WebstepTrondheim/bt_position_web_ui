@@ -1,12 +1,12 @@
 // Map channel (websocket)
-import socket from "./socket"
+import socket from './socket';
 
 let WsMap = function() {
 
-  Mazemap.Config.setApiBaseUrl("https://api.mazemap.com");
-  Mazemap.Config.setMMTileBaseUrl("https://tiles.mazemap.com");
+  Mazemap.Config.setApiBaseUrl('https://api.mazemap.com');
+  Mazemap.Config.setMMTileBaseUrl('https://tiles.mazemap.com');
 
-  let devices = {}
+  let devices = {};
 
   let rooms = {
     sofa: {
@@ -21,21 +21,26 @@ let WsMap = function() {
       lat: 63.4309541996827,
       lng: 10.395609000540617
     },
-    lille: {
-      lng: 10.395755851541963,
-      lat: 63.43094280264981
+    small_meeting_room: {
+      lng: 10.39574847543227,
+      lat: 63.43093440483068
     },
-    store: {
-      lng: 10.395965063849417,
-      lat: 63.4311143575317
+    big_meeting_room: {
+      lng: 10.395959028836984,
+      lat: 63.431113157850604
+    },
+    iot_lab: {
+      lng: 10.395804801815814,
+      lat: 63.431121555617295
     }
   }
 
   function parent_id_to_room(parent_id) {
     let parents = {
-      "d2608d72b86f": "sofa",
-      "fe4fdc9e9a24": "lille",
-      "feb1cd8c6dea": "store"
+      d2608d72b86f: 'sofa',
+      fe4fdc9e9a24: 'iot_lab',
+      feb1cd8c6dea: 'big_meeting_room',
+      ffa24f409c3a: 'small_meeting_room'
     }
     return parents[parent_id]
   }
@@ -53,6 +58,7 @@ let WsMap = function() {
     zLevel: 2
   });
 
+  map.alarm_markers = []
 
   map.addControl(new Mazemap.mapboxgl.NavigationControl());
 
@@ -66,26 +72,32 @@ let WsMap = function() {
       fillColor: Mazemap.Util.Colors.MazeColors.MazeRed  // optional
     } );
 
+  })
 
+  function highlight_room(lngLat) {
     Mazemap.Data.getPoiAt(lngLat, 2).then( poi => {
       map.highlighter.highlight(poi)
     })
-  })
+  }
 
-  function add_marker(lngLat) {
+  function add_marker(lngLat, device_id, alarm_status) {
+    let color = alarm_status ? '#C3746C': 'MazeBlue'
     let marker = new Mazemap.MazeMarker(
       {
-        zLevel: 2 // The floor zLevel coordinate is given here
+        zLevel: 2, // The floor zLevel coordinate is given here
+        color: color
       })
         .setLngLat( lngLat ) // Set the LngLat coordinates here
         .addTo(map); // Now add to the map
+
   }
 
   function draw_devices() {
     for(let device in devices) {
       let room = parent_id_to_room(devices[device])
       if(room) {
-        add_marker(rooms[room])
+        let alarm_status = map.alarm_markers.includes(device)
+        add_marker(rooms[room], device, alarm_status)
       }
     }
   }
@@ -110,7 +122,8 @@ let WsMap = function() {
     get_map: get_map,
     add_marker: add_marker,
     parent_id_to_room: parent_id_to_room,
-    draw_devices: draw_devices
+    draw_devices: draw_devices,
+    highlight_room: highlight_room
   }
 
 }
@@ -122,7 +135,7 @@ let init = function() {
 
   let map = ws_map.get_map()
 
-  map.on("click", (event) => {
+  map.on('click', (event) => {
     console.log(event.lngLat)
   })
 
@@ -132,62 +145,28 @@ let init = function() {
   }
 
   // websocket
-  let channel = socket.channel("map:lobby", {})
+  let channel = socket.channel('map:lobby', {})
 
-  channel.on("update_positions", resp => {
+  channel.on('update_positions', resp => {
     let device = JSON.parse(resp.device_position)
     if(ws_map.devices[device.device_id] != device.parent_id) {
       ws_map.devices[device.device_id] = device.parent_id
     }
-
-    ws_map.draw_devices()
   })
 
-
-  channel.on("update_alarm", resp => {
-    let data = JSON.parse(resp.device_alarm)
-    console.log(data)
-    // if(ws_map.devices[device.device_id] != device.parent_id) {
-    //   ws_map.devices[device.device_id] = device.parent_id
-    // }
-
-    // ws_map.draw_devices()
+  channel.on('update_alarm', resp => {
+    let payload = JSON.parse(resp.device_alarm)
+    if(payload.alarm_status) {
+      map.alarm_markers.push(payload.device_id)
+    } else {
+      map.alarm_markers.pop(payload.device_id)
+    }
+    ws_map.draw_devices();
   })
 
   channel.join()
-    .receive("ok", resp => { console.log("Joined successfully", resp) })
-    .receive("error", resp => { console.log("Unable to join", resp) })
+    .receive('ok', resp => { console.log('Joined successfully', resp) })
+    .receive('error', resp => { console.log('Unable to join', resp) })
 }
 
-init()
-
-
-// let lunsj = {
-//   "type": "Feature",
-//   "geometry": {
-//     "type": "Polygon",
-//     "coordinates": [
-//       [
-//         63.43094014690098,
-//         10.395655474599636
-//       ],
-//       [
-//         63.43100051328767,
-//         10.395609878440268
-//       ],
-//       [
-//         63.430968698589,
-//         10.395708974089303
-//       ],
-//       [
-//         63.43091648976974,
-//         10.395701678690756
-//       ]
-//     ]
-//   },
-//   "properties": {
-//     "title": "Lunsj",
-//     "campusId": 324,
-//     "zLevel": 2,
-//   }
-// }
+init();

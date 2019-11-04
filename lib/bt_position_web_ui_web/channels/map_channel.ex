@@ -18,6 +18,11 @@ defmodule BtPositionWebUiWeb.MapChannel do
       "position_update"
     )
 
+    Phoenix.PubSub.subscribe(
+      BtPositionWebUi.PubSub,
+      "alarm_update"
+    )
+
     {:noreply, socket}
   end
 
@@ -33,7 +38,7 @@ defmodule BtPositionWebUiWeb.MapChannel do
     {:noreply, socket}
   end
 
-  def handle_info({:device_update, data}, socket) do
+  def handle_info({:alarm_update, data}, socket) do
     # Logger.info("Got data from pubsub: #{inspect(new_device)}")
     send(self(), {:ws_alarm_update, data})
     # send meaasge to be handled by map-websocket
@@ -50,6 +55,7 @@ defmodule BtPositionWebUiWeb.MapChannel do
 
   def handle_info({:ws_alarm_update, data}, socket) do
     data = Jason.encode!(data)
+
     broadcast!(socket, "update_alarm", %{device_alarm: data})
     {:noreply, socket}
   end

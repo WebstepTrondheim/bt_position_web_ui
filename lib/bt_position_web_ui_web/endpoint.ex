@@ -2,7 +2,7 @@ defmodule BtPositionWebUiWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :bt_position_web_ui
 
   socket "/socket", BtPositionWebUiWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket

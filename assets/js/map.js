@@ -156,7 +156,7 @@ let init = function() {
 
   channel.on('update_alarm', resp => {
     let payload = JSON.parse(resp.device_alarm)
-    if(payload.alarm_status) {
+    if(payload.alarm_status && !map.alarm_markers.includes(payload.device_id)) {
       map.alarm_markers.push(payload.device_id)
     } else {
       map.alarm_markers.pop(payload.device_id)
